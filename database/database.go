@@ -33,6 +33,7 @@ func Init() {
 	log.Info("Database connected successfully")
 
 	Migrate(DB)
+
 }
 
 func Migrate(DB *gorm.DB) {

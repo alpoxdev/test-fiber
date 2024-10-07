@@ -7,7 +7,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 
 	"test-fiber/config"
+	"test-fiber/cron"
 	"test-fiber/database"
+	"test-fiber/lib"
 	"test-fiber/routes"
 )
 
@@ -24,6 +26,8 @@ func main() {
 	config.Init()
 	database.Init()
 	routes.Init(app)
+	lib.Init()
+	cron.Init()
 
 	// Cors middleware
 	app.Use(cors.New(cors.Config{

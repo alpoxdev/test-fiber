@@ -1,18 +1,39 @@
 package routes
 
 import (
-	"test-fiber/database"
-	"test-fiber/models"
-
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
+
+	"test-fiber/database"
+	"test-fiber/lib"
+	"test-fiber/models"
 )
 
 func GetUsers(c *fiber.Ctx) error {
-	users := []models.User{}
-	database.DB.Find(&users)
+	var users []models.User
+	var totalCount int64
 
-	totalCount := int64(0)
-	database.DB.Model(&models.User{}).Count(&totalCount)
+	err := database.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Find(&users).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&models.User{}).Count(&totalCount).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		lib.Error("GetUsers 트랜잭션 실패", zap.Error(err))
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "사용자 정보를 가져오는 데 실패했습니다",
+		})
+	}
+	
+	lib.Info("GetUsers", zap.Int64("total", totalCount))
 
 	return c.JSON(fiber.Map{
 		"rows": users,
