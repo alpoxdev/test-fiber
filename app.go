@@ -16,14 +16,13 @@ func setupRoutes(app *fiber.App) {
 }
 
 func main() {
-	config.Init()
-	database.Init()
-	database.Migrate()
-
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
 	})
+
+	config.Init()
+	database.Init()
 	routes.Init(app)
 
 	// Cors middleware
@@ -33,7 +32,9 @@ func main() {
 
 	// Error handler middleware
 	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(404) // -> 404 Not Found
+		return c.Status(404).JSON(fiber.Map{
+			"message": "Not Found",
+		})
 	})
 
 	log.Info("Server is running on port 8000")
