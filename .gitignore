@@ -2,4 +2,3 @@
 .idea/
 
 .env
-test-fiber # 빌드 파일 무시
