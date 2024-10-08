@@ -43,7 +43,18 @@ func GetUsers(c *fiber.Ctx) error {
 func GetUser(c *fiber.Ctx) error {
 	user := models.User{}
 	id := c.Params("id")
-	database.DB.Find(&user, "id = ?", id)
+	result := database.DB.Find(&user, "id = ?", id)
+
+	if result.Error != nil {
+		return fiber.ErrNotFound
+	}
+
+	if result.RowsAffected == 0 {
+		return c.Status(404).JSON(fiber.Map{
+			"message": "User not found",
+		})
+	}
+
 	return c.JSON(user)
 }
 
