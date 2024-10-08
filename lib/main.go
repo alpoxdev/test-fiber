@@ -1,5 +1,3 @@
 package lib
 
-func Init() {
-	InitLog()
-}
+func Init() {}

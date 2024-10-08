@@ -1,9 +1,10 @@
 package cron
 
 import (
-	"test-fiber/lib"
-
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/robfig/cron/v3"
+
+	"test-fiber/config"
 )
 
 func Init() {
@@ -11,7 +12,7 @@ func Init() {
 
 	// 1초마다 실행
 	c.AddFunc("* * * * * *", func() {
-		lib.Info("Hello, World!")
+		log.Info("Hello, World! env: ", config.AppConfig.GO_ENV)
 	})
 
 	c.Start()

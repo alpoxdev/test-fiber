@@ -9,7 +9,7 @@ import (
 	"test-fiber/config"
 	"test-fiber/cron"
 	"test-fiber/database"
-	"test-fiber/lib"
+	"test-fiber/middlewares"
 	"test-fiber/routes"
 )
 
@@ -25,8 +25,8 @@ func main() {
 
 	config.Init()
 	database.Init()
+	middlewares.Init(app)
 	routes.Init(app)
-	lib.Init()
 	cron.Init()
 
 	// Cors middleware
