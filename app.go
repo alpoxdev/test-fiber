@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 
 	"test-fiber/config"
 	"test-fiber/cron"
@@ -28,6 +29,11 @@ func main() {
 	middlewares.Init(app)
 	routes.Init(app)
 	cron.Init()
+
+	// Encrypt cookie middleware
+	app.Use(encryptcookie.New(encryptcookie.Config{
+		Key: "secret-key",
+	}))
 
 	// Cors middleware
 	app.Use(cors.New(cors.Config{
